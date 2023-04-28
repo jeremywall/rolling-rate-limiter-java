@@ -7,7 +7,7 @@ shared: &shared
     - checkout
     - run:
         name: Build
-        command: mvn -B clean package sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$sonar -Dsonar.organization=jeremy-test-org -Dsonar.projectKey=jeremy-test-org_rolling-rate-limiter-java --update-snapshots --errors --show-version --no-transfer-progress -Dsonar.skip=false -DskipTests=true
+        command: mvn -B -DskipTests clean package
     - run:
         name: Test
         command: mvn test
@@ -16,18 +16,18 @@ shared: &shared
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
   # Below is the definition of your job to build and test your app, you can rename and customize it as you want.
-  # jdk8:
-  #   docker:
-  #     - image: cimg/openjdk:8.0
-  #   <<: *shared
+  jdk8:
+    docker:
+      - image: cimg/openjdk:8.0
+    <<: *shared
   jdk11:
     docker:
       - image: cimg/openjdk:11.0
     <<: *shared
-  # jdk17:
-  #   docker:
-  #     - image: cimg/openjdk:17.0
-  #   <<: *shared
+  jdk17:
+    docker:
+      - image: cimg/openjdk:17.0
+    <<: *shared
 #  build-and-test:
     # These next lines define a Docker executor: https://circleci.com/docs/2.0/executor-types/
     # You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
@@ -55,8 +55,6 @@ workflows:
   work: # This is the name of the workflow, feel free to change it to better match your workflow.
     # Inside the workflow, you define the jobs you want to run.
     jobs:
-      # - jdk8
-      - jdk11:
-          context:
-            - test
-      # - jdk17
+      - jdk8
+      - jdk11
+      - jdk17
